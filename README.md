@@ -10,7 +10,7 @@ Please read the following disclaimer carefully before using the Downloader CLI T
 - It is strictly prohibited to distribute or share the downloaded content through any means, including but not limited to uploading to file-sharing platforms, torrent sites, or any other form of digital or physical distribution. Doing so is a violation of copyright laws and may result in legal consequences.
 
 ---
-
+!kodekloud dl -c "cookies.txt" -o "/home/umesh-pc/Desktop/workspace/kodecloud/videos"
 ## Features
 
 - [x] Download video lessons in selected quality
@@ -312,3 +312,4 @@ If you are getting the below message while downloading course, make sure you reg
 ```console
 requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url
 ```
+python3 src/kodekloud_downloader/cli.py dl -t "YOUR_BEARER_TOKEN" -o "..."

@@ -1,6 +1,10 @@
+import sys
 import logging
 from pathlib import Path
 from typing import Union
+
+# Add src to sys.path so we can import from the source tree
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import click
 import validators
@@ -45,8 +49,14 @@ def kodekloud(verbose):
 @click.option(
     "--cookie",
     "-c",
-    required=True,
+    required=False,
     help="Cookie file. Course should be accessible via this.",
+)
+@click.option(
+    "--token",
+    "-t",
+    required=False,
+    help="Token authorization bearer token.",
 )
 @click.option(
     "--max-duplicate-count",
@@ -55,13 +65,21 @@ def kodekloud(verbose):
     type=int,
     help="If same video is downloaded this many times, then download stops",
 )
+@click.pass_context
 def dl(
+    ctx,
     course_url,
     quality: str,
     output_dir: Union[Path, str],
     cookie,
+    token,
     max_duplicate_count: int,
 ):
+    if not token and not cookie:
+        raise click.UsageError(
+            "You must provide either --token or --cookie for authentication."
+        )
+
     if course_url is None:
         courses = collect_all_courses()
         selected_courses = select_courses(courses)
@@ -72,6 +90,7 @@ def dl(
                 quality=quality,
                 output_dir=output_dir,
                 max_duplicate_count=max_duplicate_count,
+                token=token,
             )
     elif validators.url(course_url):
         course_detail = parse_course_from_url(course_url)
@@ -81,6 +100,7 @@ def dl(
             quality=quality,
             output_dir=output_dir,
             max_duplicate_count=max_duplicate_count,
+            token=token,
         )
     else:
         logging.error("Please enter a valid URL")
